@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCanvas</title>
+</head>
+
+<body>
+    <div class="controls">
+       
+
+            <label for="thickness">Thickness:</label>
+            <input type="range" name="size" id="thickness" value="1" min-value="1" max-value="100">
+        
+            <label for="color">Adjust color:</label>
+            <input type="color" name="color" id="color" value="#ffc600">
+        
+
+
+    </div>
+    <style>
+        :root {
+            --color: ;
+            --thick: 1;
+        }
+
+        .controls {
+            margin: 0px;
+            width: 222px;
+        }
+
+        .controls label {
+            font-size: 40px;
+            color: var(--color);
+        }
+
+        input {
+            font-size: 40px;
+        }
+
+        html,
+        body {
+            margin: 0;
+        }
+    </style>
+    <canvas id="canvas"></canvas>
+    <script>
+        let thickness = document.getElementById('thickness');
+        let color = document.getElementById('color');
+        console.log(thickness.value);
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.strokeStyle = color.value;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = thickness.value;
+        let isDrawing = false;
+        lastX = 0;
+        lastY = 0;
+
+        function draw(e) {
+
+            if (!isDrawing)
+                return;
+            // console.log(e);
+            color = document.getElementById('color');
+            console.log(color.value);
+            thickness = document.getElementById('thickness');
+            ctx.strokeStyle = color.value;
+            // console.log(thickness.value);
+            ctx.lineWidth = thickness.value;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        });
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+        const inputs = document.querySelector('#color');
+
+        function handleUpdate() {
+            //   const suffix = this.dataset.sizing || '';
+            document.documentElement.style.setProperty(`--${this.name}`, this.value);
+            console.log(this.name);
+        }
+
+        inputs.addEventListener('change', handleUpdate);
+        inputs.addEventListener('mousemove', handleUpdate);
+    </script>
+
+</body>
+
+</html>
